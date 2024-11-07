@@ -1,12 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bilangan Ganjil dari ESP8266</title>
+  <script>
+    let numbers = [];
+    let index = 0;
+
+    // Fungsi untuk mengambil data bilangan ganjil dari ESP8266
+    async function fetchData() {
+      try {
+        const response = await fetch("http://192.168.1.5/data", { mode: 'cors' });  // Gunakan endpoint /data
+        if (response.ok) {
+          numbers = await response.json();
+          index = 0;
+          showNumber();
+        } else {
+          console.error("Gagal mengambil data dari ESP8266");
+        }
+      } catch (error) {;
+      }
+    }
+
+    // Fungsi untuk menampilkan bilangan ganjil secara bergantian
+    function showNumber() {
+      if (numbers.length > 0) {
+        document.getElementById('number').innerHTML = numbers[index];
+        index = (index + 1) % numbers.length;
+        setTimeout(showNumber, 1000);
+      }
+    }
+
+    // Memuat data saat halaman dibuka
+    window.onload = fetchData;
+  </script>
 </head>
 <body>
-    <h1>INI HTML</h1>
+  <h1>Bilangan Ganjil dari ESP8266</h1>
+  <h2 id="number"></h2>
 </body>
 </html>
